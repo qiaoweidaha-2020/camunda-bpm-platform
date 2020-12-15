@@ -664,6 +664,7 @@ def getParallelStages(List stageTypes, List dbs, List failedStageTypes) {
                       options: [artifactsPublisher(disabled: true), junitPublisher(disabled: true)]
                   ) {
 //                    cambpmRunMavenByStageType(stageType, dbLabel)
+                    sh "ls -la"
                     cambpmRunMaven('engine/', 'clean install -Ph2')
                   }
 //                }
