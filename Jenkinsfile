@@ -652,26 +652,26 @@ def getParallelStages(List stageTypes, List dbs, List failedStageTypes) {
     String dbLabel = stageAxes['DB']
     String stageType = stageAxes['STAGE_TYPE']
     if (cambpmIsNotFailedStageType(failedStageTypes, stageType)) {
-      tasks[axisEnv.join(', ')] = { ->
+      tasks["$stageType-$dbLabel"] = { ->
         node(dbLabel) {
-          withEnv(axisEnv) {
+//          withEnv(axisEnv) {
             stage("$stageType-$dbLabel") {
               // The 'stage' here works like a 'step' in the declarative style.
               stage("Run Maven DB") {
-                catchError(stageResult: 'FAILURE') {
+//                catchError(stageResult: 'FAILURE') {
                   withMaven(jdk: 'jdk-8-latest', maven: 'maven-3.2-latest',
                       mavenSettingsConfig: 'camunda-maven-settings',
                       options: [artifactsPublisher(disabled: true), junitPublisher(disabled: true)]
                   ) {
                     cambpmRunMavenByStageType(stageType, dbLabel)
                   }
-                }
+//                }
               }
               stage("PublishTestResult for DB") {
                 cambpmPublishTestResult();
               }
             }
-          }
+//          }
         }
       }
     }
